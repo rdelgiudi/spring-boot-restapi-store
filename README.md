@@ -18,4 +18,5 @@ GET */{entity} - lists all Entities (mapped to DTO)
 GET */{entity}/{id} - returns Entity (mapped to DTO) whose id equals the path variable "id"
 PUT */{entity}/{id} - fully updates Entity (mapped from DTO) whose id equals the path variable "id"
 PATCH */{entity}/{id} - partially updates Entity (mapped from DTO) whose id equals the path variable "id"
+DELETE */{entity}/{id} - deletes Entity (mapped from DTO) whose id equals the path variable "id"
 ```
