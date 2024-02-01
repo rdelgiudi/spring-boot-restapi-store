@@ -9,7 +9,7 @@ This project uses the following technologies:
 - Spring Boot - base of the project;
 - Spring Web - creation of REST controllers;
 - Spring Data JPA (on top of Hibernate) - data access;
-- PostgreSQL Driver - connection to database;
+- PostgreSQL Driver - communication with database;
 - H2 Database - creation of an in memory database used in the testing enviroment;
 - Lombok - boilerplate code automatic generation (constructors, getters, setter, etc.).
 ### Database
