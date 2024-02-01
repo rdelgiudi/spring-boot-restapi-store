@@ -4,6 +4,14 @@ Simple REST API for managing and retrieving information from a relational databa
 In this section, the basics of the created project are described.
 ### Functionality
 Currently the project allows for basic CRUD operations on each database entity. Project was created with modularity in mind which allows to easily swap implementations for all application layers.
+### Technologies
+This project uses the following technologies:
+- Spring Boot - base of the project;
+- Spring Web - creation of REST controllers;
+- Spring Data JPA (on top of Hibernate) - data access;
+- PostgreSQL Driver - connection to database;
+- H2 Database - creation of an in memory database used in the testing enviroment;
+- Lombok - boilerplate code automatic generation (constructors, getters, setter, etc.).
 ### Database
 The database that is accessed during runtime is located in a Docker container that uses the official PostgreSQL image. The database can be described by the following diagram:
 
