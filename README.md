@@ -17,9 +17,9 @@ The database that is accessed during runtime is located in a Docker container th
 
 ![postgres - database](https://github.com/rdelgiudi/spring-boot-restapi-store/assets/83218453/962cfa7e-7e4a-482f-926b-993c57a58d96)
 
-## Avaiable endpoints
+## Available endpoints
 
-### Endpoints avaiable for each entity (CRUD operations)
+### Endpoints available for each entity (CRUD operations)
 ```
 POST */{entity} - creates new Entity (mapped from DTO)
 GET */{entity} - lists all Entities (mapped to DTO)
