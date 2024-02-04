@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 // Presentation layer implementation
@@ -48,6 +49,14 @@ public class OrderController {
             OrderDto orderDto = orderMapper.mapTo(orderEntity);
             return new ResponseEntity<>(orderDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping(path = "/customers/{customer_id}/orders")
+    public List<OrderDto> getCustomerOrders(@PathVariable("customer_id") Long customerId) {
+        // This could first check if customer exists
+        List<OrderEntity> foundOrders = orderService.findByCustomerId(customerId);
+
+        return foundOrders.stream().map(orderMapper::mapTo).toList();
     }
 
     @PutMapping(path = "/orders/{id}")

@@ -380,4 +380,57 @@ public class OrderControllerIntegrationTests {
                 MockMvcResultMatchers.status().isNoContent()
         );
     }
+
+    @Test
+    public void testThatFindOrdersByCustomerIdSuccessfullyReturnsStatus200Ok() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/customers/1/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatFindByCustomerIdReturnsTheExpectedOrders() throws Exception{
+        CustomerEntity customerEntityA = TestDataUtil.generateTestCustomerEntityA(null);
+        customerService.create(customerEntityA);
+        CustomerEntity customerEntityB = TestDataUtil.generateTestCustomerEntityB(null);
+        customerService.create(customerEntityB);
+
+        ProductEntity productEntityA = TestDataUtil.generateTestProductEntityA();
+        productService.create(productEntityA);
+        ProductEntity productEntityB = TestDataUtil.generateTestProductEntityB();
+        productService.create(productEntityB);
+
+        OrderEntity orderEntityA = TestDataUtil.generateTestOrderEntity(customerEntityA, productEntityA, 7);
+        OrderEntity savedEntityA = orderService.create(orderEntityA);
+        OrderEntity orderEntityB = TestDataUtil.generateTestOrderEntity(customerEntityA, productEntityB, 3);
+        OrderEntity savedEntityB = orderService.create(orderEntityB);
+        OrderEntity orderEntityC = TestDataUtil.generateTestOrderEntity(customerEntityB, productEntityA, 10);
+        OrderEntity savedEntityC = orderService.create(orderEntityC);
+        OrderEntity orderEntityD = TestDataUtil.generateTestOrderEntity(customerEntityB, productEntityB, 15);
+        OrderEntity savedEntityD = orderService.create(orderEntityD);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/customers/" + customerEntityA.getId() + "/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].id").value(savedEntityA.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].customer").value(savedEntityA.getCustomer())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].product").value(savedEntityA.getProduct())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].amount").value(savedEntityA.getAmount())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].id").value(savedEntityB.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].customer").value(savedEntityB.getCustomer())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].product").value(savedEntityB.getProduct())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[1].amount").value(savedEntityB.getAmount())
+        );
+    }
 }

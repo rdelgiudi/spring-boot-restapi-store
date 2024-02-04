@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends CrudRepository<OrderEntity, Long>,
         PagingAndSortingRepository<OrderEntity, Long> {
 
-    @Query("SELECT a FROM OrderEntity a WHERE a.total > ?1")
-    Iterable<OrderEntity> totalMoreThan(float total);
+    //@Query("SELECT a FROM OrderEntity a WHERE a.total > ?1")
+    Iterable<OrderEntity> findByTotalGreaterThan(float total);
+
+    //@Query("SELECT a FROM OrderEntity a WHERE a.customer.id = ?1")
+    Iterable<OrderEntity> findByCustomerIdEquals(long customerId);
 }

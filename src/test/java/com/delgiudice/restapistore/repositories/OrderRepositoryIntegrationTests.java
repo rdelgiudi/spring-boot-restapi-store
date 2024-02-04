@@ -117,7 +117,7 @@ public class OrderRepositoryIntegrationTests {
         orderEntityC.setTotal(15f);
         underTest.save(orderEntityC);
 
-        Iterable<OrderEntity> result = underTest.totalMoreThan(7f);
+        Iterable<OrderEntity> result = underTest.findByTotalGreaterThan(7f);
         assertThat(result)
                 .hasSize(2)
                 .containsExactly(orderEntityB, orderEntityC);

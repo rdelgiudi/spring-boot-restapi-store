@@ -11,7 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 // Service layer implementation
 
@@ -116,5 +120,16 @@ public class OrderServiceImpl implements OrderService {
     public void deleteById(Long id) {
         // Should the product amount from the previous order be returned to stock if order deleted?
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrderEntity> findByCustomerId(Long customerId) {
+        Iterable<OrderEntity> foundOrder = orderRepository.findByCustomerIdEquals(customerId);
+        return StreamSupport.stream(foundOrder.spliterator(), false)
+                .collect(Collectors.toList());
+        //or
+        // List<OrderEntity> resultList = new ArrayList<>();
+        // foundOrder.forEach(resultList::add);
+        // return resultList;
     }
 }
