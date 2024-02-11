@@ -433,4 +433,88 @@ public class OrderControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$[1].amount").value(savedEntityB.getAmount())
         );
     }
+
+    @Test
+    public void testThatAddOrderToSpecifiedClientAndProductIdReturnsStatus200OkWhenBothProductAndCustomerExist() throws Exception {
+        CustomerEntity customerEntityA = TestDataUtil.generateTestCustomerEntityA(null);
+        customerService.create(customerEntityA);
+
+        ProductEntity productEntityA = TestDataUtil.generateTestProductEntityA();
+        productService.create(productEntityA);
+
+        OrderDto orderDto = TestDataUtil.generateTestOrderDto(null, null, 7);
+        String requestJson = objectMapper.writeValueAsString(orderDto);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/customers/" + customerEntityA.getId() + "/orders?product_id=" + productEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatAddOrderToSpecifiedClientAndProductIdReturnsStatus400BadRequestWhenProductDoesNotExist() throws Exception {
+        CustomerEntity customerEntityA = TestDataUtil.generateTestCustomerEntityA(null);
+        customerService.create(customerEntityA);
+
+        OrderDto orderDto = TestDataUtil.generateTestOrderDto(null, null, 7);
+        String requestJson = objectMapper.writeValueAsString(orderDto);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/customers/" + customerEntityA.getId() + "/orders?product_id=999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        );
+    }
+
+    @Test
+    public void testThatAddOrderToSpecifiedClientAndProductIdReturnsStatus400BadRequestWhenCustomerDoesNotExist() throws Exception {
+        ProductEntity productEntityA = TestDataUtil.generateTestProductEntityA();
+        productService.create(productEntityA);
+
+        OrderDto orderDto = TestDataUtil.generateTestOrderDto(null, null, 7);
+        String requestJson = objectMapper.writeValueAsString(orderDto);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/customers/999" + "/orders?product_id=" + productEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
+        );
+    }
+
+    @Test
+    public void testThatAddOrderToSpecifiedClientAndProductIdReturnsTheCorrectlySavedProduct() throws Exception {
+        CustomerEntity customerEntityA = TestDataUtil.generateTestCustomerEntityA(null);
+        customerService.create(customerEntityA);
+
+        ProductEntity productEntityA = TestDataUtil.generateTestProductEntityA();
+        productService.create(productEntityA);
+
+        OrderDto orderDto = TestDataUtil.generateTestOrderDto(null, null, 7);
+        String requestJson = objectMapper.writeValueAsString(orderDto);
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/customers/" + customerEntityA.getId() + "/orders?product_id=" + productEntityA.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").value(1L)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.customer").value(customerEntityA)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.product").value(productEntityA)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.amount").value(orderDto.getAmount())
+        );
+    }
 }

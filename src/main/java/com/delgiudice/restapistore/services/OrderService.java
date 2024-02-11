@@ -26,4 +26,6 @@ public interface OrderService {
     void deleteById(Long id);
 
     List<OrderEntity> findByCustomerId(Long customerId);
+
+    Optional<OrderEntity> createWithProductAndCustomerId(OrderEntity orderEntity, Long customerId, Long productId);
 }

@@ -132,4 +132,26 @@ public class OrderServiceImpl implements OrderService {
         // foundOrder.forEach(resultList::add);
         // return resultList;
     }
+
+    @Override
+    public Optional<OrderEntity> createWithProductAndCustomerId(OrderEntity orderEntity, Long customerId, Long productId) {
+        Optional<CustomerEntity> customerEntity = customerService.findById(customerId);
+        if (customerEntity.isPresent()) {
+            orderEntity.setCustomer(customerEntity.get());
+        }
+        else {
+            return Optional.empty();
+        }
+
+        Optional<ProductEntity> productEntity = productService.findById(productId);
+        if (productEntity.isPresent()) {
+            orderEntity.setProduct(productEntity.get());
+        }
+        else {
+            return Optional.empty();
+        }
+
+        orderEntity.setId(null);
+        return Optional.of(orderRepository.save(orderEntity));
+    }
 }

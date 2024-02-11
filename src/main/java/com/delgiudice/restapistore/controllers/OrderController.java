@@ -35,6 +35,20 @@ public class OrderController {
         return new ResponseEntity<>(orderMapper.mapTo(savedOrderEntity), HttpStatus.CREATED);
     }
 
+    @PostMapping(path = "/customers/{customer_id}/orders")
+    public ResponseEntity<OrderDto> createOrder(@RequestParam(name = "product_id") Long productId,
+                                                @PathVariable("customer_id") Long customerId,
+                                                @RequestBody OrderDto orderDto) {
+        OrderEntity orderEntity = orderMapper.mapFrom(orderDto);
+        Optional<OrderEntity> savedOrderEntity = orderService.createWithProductAndCustomerId(orderEntity,
+                customerId, productId);
+
+        return savedOrderEntity.map(savedOrder -> {
+            OrderDto savedOrderDto = orderMapper.mapTo(savedOrder);
+            return new ResponseEntity<>(savedOrderDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
     @GetMapping(path = "/orders")
     public Page<OrderDto> listOrders(Pageable pageable) {
         Page<OrderEntity> orderList = orderService.findAll(pageable);
